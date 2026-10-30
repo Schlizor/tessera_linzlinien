@@ -1,5 +1,5 @@
 id: linz_departures
-version: 0.1.0
+version: 0.2.0
 api: "0.12"
 icon: tram
 maintainer: schli
@@ -13,7 +13,7 @@ flash_kb: 12
 permissions:
   network: [www.linzag.at]
 attributes: [cloud]
-privacy: https://www.linzag.at/portal/de/privatsphaere
+privacy: https://github.com/Schlizor/tessera_linzlinien#privacy
 fetch:
   - id: stop_search
     url: "https://www.linzag.at/static/XML_STOPFINDER_REQUEST?sessionID=0&locationServerActive=1&type_sf=any&name_sf={search}&outputFormat=JSON&coordOutputFormat=WGS84%5Bdd.ddddd%5D&limit=10"

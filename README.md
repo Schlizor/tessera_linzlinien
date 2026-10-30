@@ -1,17 +1,40 @@
 # Linz Linien Abfahrten fuer Tessera
 
-Ein Tessera-Plugin fuer Live-Abfahrten der LINZ AG Linien. Es unterstuetzt Bus, Obus und Strassenbahn und zeigt pro Abfahrt Linie, Ziel, Countdown und - sofern vorhanden - den Bahnsteig.
+![Linz Linien Abfahrten auf einem Tessera-Panel](store.png)
+
+Live-Abfahrten der LINZ AG Linien auf Tessera-Panels. Das Plugin zeigt Bus, Obus und Strassenbahn mit Ziel, Countdown und Bahnsteig.
+
+[Changelog](CHANGELOG.md) · [Validierung](VALIDATION.md) · [Lizenz](LICENSE)
 
 ## Einrichtung
 
-1. Das Plugin in Tessera ueber einen Ordner oder GitHub-Link hinzufuegen.
-2. Das Tile auf dem Panel platzieren.
-3. Im Tile-Inspector nach der gewuenschten Haltestelle suchen und sie aus der Liste auswaehlen.
+1. In Tessera unter **Plugins** auf **Add with a link** gehen.
+2. `https://github.com/Schlizor/tessera_linzlinien` einfuegen.
+3. Das Plugin dem gewuenschten Bildschirm hinzufuegen und die Firmware bauen/installieren.
+4. In **Layout** ein **Abfahrten**-Tile platzieren.
+5. Im Feld **Haltestelle** mindestens zwei Zeichen eingeben und einen Treffer auswaehlen.
+6. Layout speichern und an den Bildschirm senden.
 
-Eine Haltestellen-ID muss nicht bekannt sein. Tessera sucht die Haltestelle direkt ueber den offiziellen Linz-AG-Endpunkt und verwendet die interne ID automatisch.
+Die Haltestellensuche verwendet den offiziellen Linz-AG-Stopfinder. Die Auswahl speichert die interne Haltestellen-ID; diese muss normalerweise nicht manuell bekannt sein.
 
-Die Daten werden hoechstens einmal pro Minute ueber `www.linzag.at` aktualisiert. Die API-Antwort wird im Home-Assistant-Teil von Tessera abgerufen und auf die wenigen Felder reduziert, die das Panel benoetigt.
+## Anzeige
 
-## Datenschutz
+- Die Abfahrten werden hoechstens einmal pro Minute aktualisiert.
+- Bus, Obus und Strassenbahn werden gemeinsam nach der prognostizierten Abfahrtszeit sortiert.
+- Jede Zeile zeigt Linie, Ziel, Countdown und - wenn vorhanden - den Bahnsteig.
+- Bei fehlenden Live-Daten bleibt die letzte erfolgreiche Antwort erhalten, soweit Tessera sie als veraltete Antwort liefert.
+- Das Tile passt sich an die verfuegbare Hoehe an; groessere Tiles zeigen mehr Abfahrten.
 
-Fuer die Abfrage werden der eingegebene Haltestellenname und die Anfrage an den oeffentlichen Linz-AG-Endpunkt uebertragen. Es werden keine Zugangsdaten benoetigt.
+## Datenquelle und Datenschutz
+
+Das Plugin nutzt die oeffentlichen JSON-Endpunkte von [LINZ AG Linien](https://www.linzag.at/). Tessera uebertraegt den Suchtext beziehungsweise die ausgewaehlte Haltestellen-ID an `www.linzag.at`; Zugangsdaten werden nicht benoetigt. Es werden keine Home-Assistant-Entitaeten gelesen und keine Home-Assistant-Aktionen aufgerufen.
+
+Details zur Datenverarbeitung stehen unter [Privacy](#privacy).
+
+### Privacy
+
+Die Tessera-App in Home Assistant sendet Suchtexte und die ausgewaehlte Haltestellen-ID per HTTPS an `www.linzag.at`. Die Linz AG kann dabei die Anfrage, die IP-Adresse und uebliche Verbindungsdaten sehen. Das Plugin speichert keine personenbezogenen Daten und benoetigt keinen API-Key.
+
+## Entwicklung und Validierung
+
+Die lokale Grundpruefung laeuft mit Python 3, PyYAML und dem Tessera-Plugin-Checker. Die Live-Endpunkte koennen mit einer Haltestelle wie `60501720` (Hauptbahnhof) getestet werden. Siehe [VALIDATION.md](VALIDATION.md) fuer die vollstaendige Checkliste.

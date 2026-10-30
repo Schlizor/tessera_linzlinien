@@ -1,0 +1,5 @@
+This plugin is an original Linz Linien adaptation for Tessera.
+
+It follows the public Tessera plugin API and uses the Linz AG Linien public
+JSON endpoints. Linz AG and LINZ AG Linien are not affiliated with or
+endorsing this plugin.
