@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.1 - 2026-10-30
+- Richtungsfilter koennen nach der Auswahl wieder abgewaehlt werden.
+- Die Tiles erhalten klare Titel und eine staerkere typografische Hierarchie.
+
 ## 0.5.0 - 2026-10-30
 - Mehrfachauswahl fuer bis zu sechs Linien hinzugefuegt.
 - Linienfilterung fuer Mehrfachauswahl robust ins Tile verlagert.

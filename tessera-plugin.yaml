@@ -1,5 +1,5 @@
 id: linz_departures
-version: 0.5.0
+version: 0.5.1
 api: "0.12"
 icon: tram
 maintainer: schli
@@ -75,11 +75,13 @@ tiles:
         options_from: lines
       - id: direction_a
         kind: choice
+        optional: true
         label: direction_a
         hint: direction_a_hint
         options_from: directions
       - id: direction_b
         kind: choice
+        optional: true
         label: direction_b
         hint: direction_b_hint
         options_from: directions
@@ -116,11 +118,13 @@ tiles:
         options_from: lines
       - id: direction_a
         kind: choice
+        optional: true
         label: direction_a
         hint: direction_a_hint
         options_from: directions
       - id: direction_b
         kind: choice
+        optional: true
         label: direction_b
         hint: direction_b_hint
         options_from: directions

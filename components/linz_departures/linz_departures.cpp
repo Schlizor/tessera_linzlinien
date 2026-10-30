@@ -38,6 +38,8 @@ class DeparturesTile : public tessera::Tile {
     direction_b_ = c.options["direction_b"]["value"] | "";
     show_platform_ = c.options["show_platform"] | true;
     show_time_ = c.options["show_time"] | true;
+    title_ = ui::label(c.parent, Font::TITLE, theme::INK);
+    ui::set_text(title_, plugin_->text("departures_title"));
     for (int i = 0; i < kMaxRows; ++i) make_row(rows_[i], c.parent);
   }
 
@@ -68,8 +70,13 @@ class DeparturesTile : public tessera::Tile {
       return;
     }
 
+    const int title_height = ui::line_height(Font::TITLE);
     const int row_height = std::max(ui::line_height(Font::TITLE), ui::line_height(Font::BODY)) + ui::px(8);
-    const int visible = std::min(kMaxRows, std::max(1, height_ / row_height));
+    const int content_y = title_height + ui::px(8);
+    const int visible = std::min(kMaxRows, std::max(1, (height_ - content_y) / row_height));
+    lv_obj_clear_flag(title_, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_set_size(title_, width_, title_height);
+    lv_obj_set_pos(title_, 0, 0);
     for (int i = 0; i < kMaxRows; ++i) {
       if (i >= visible || i >= static_cast<int>(departures_.size())) {
         hide_row(rows_[i]);
@@ -88,7 +95,7 @@ class DeparturesTile : public tessera::Tile {
       }
       if (show_time_ && departure.estimated) when = tessera::clock_text(departure.estimated) + "  " + when;
       if (show_platform_ && !departure.platform.empty()) when += "  " + departure.platform;
-      place_row(rows_[i], departure.line, departure.destination, when, i * row_height);
+      place_row(rows_[i], departure.line, departure.destination, when, content_y + i * row_height);
     }
   }
 
@@ -99,6 +106,7 @@ class DeparturesTile : public tessera::Tile {
       ui::set_color(row.destination, theme::INK);
       ui::set_color(row.when, theme::MUTED);
     }
+    ui::set_color(title_, theme::INK);
     on_tick(tessera::epoch());
   }
 
@@ -123,6 +131,7 @@ class DeparturesTile : public tessera::Tile {
   bool show_platform_ = true;
   bool show_time_ = true;
   std::vector<DepartureRow> departures_;
+  lv_obj_t *title_{};
   Row rows_[kMaxRows];
 
   void make_row(Row &row, lv_obj_t *parent) {
@@ -171,9 +180,11 @@ class DeparturesTile : public tessera::Tile {
 
   void paint_message(const std::string &message) {
     for (int i = 0; i < kMaxRows; ++i) hide_row(rows_[i]);
+    lv_obj_clear_flag(title_, LV_OBJ_FLAG_HIDDEN);
     lv_obj_clear_flag(rows_[0].destination, LV_OBJ_FLAG_HIDDEN);
     ui::set_text(rows_[0].destination, message);
-    lv_obj_set_pos(rows_[0].destination, 0, std::max(0, (height_ - ui::line_height(Font::BODY)) / 2));
+    lv_obj_set_pos(rows_[0].destination, 0, std::max(ui::line_height(Font::TITLE) + ui::px(8),
+                                                     (height_ - ui::line_height(Font::BODY)) / 2));
     lv_obj_set_width(rows_[0].destination, width_);
   }
 };
@@ -198,8 +209,10 @@ class NextDepartureTile : public tessera::Tile {
     if (direction_a_.empty()) direction_a_ = c.options["direction"]["value"] | "";
     show_platform_ = c.options["show_platform"] | true;
     show_time_ = c.options["show_time"] | true;
+    title_ = ui::label(c.parent, Font::TITLE, theme::INK);
+    ui::set_text(title_, plugin_->text("next_departure_title"));
     badge_ = ui::block(c.parent, theme::ACCENT);
-    line_ = ui::label(badge_, Font::TITLE, theme::ON_ACCENT);
+    line_ = ui::label(badge_, Font::BODY, theme::ON_ACCENT);
     destination_ = ui::label(c.parent, Font::BODY, theme::MUTED);
     when_ = ui::label(c.parent, Font::VALUE, theme::INK);
     lv_label_set_long_mode(destination_, LV_LABEL_LONG_DOT);
@@ -243,14 +256,19 @@ class NextDepartureTile : public tessera::Tile {
     if (show_time_) destination += "  ·  " + when;
     ui::set_text(destination_, destination);
     ui::set_text(when_, show_time_ && departure_.estimated ? tessera::clock_text(departure_.estimated) : when);
-    const int badge_width = std::min(width_ / 2, std::max(ui::px(32), ui::text_width(departure_.line, Font::TITLE) + ui::px(12)));
-    lv_obj_set_size(badge_, badge_width, ui::line_height(Font::TITLE) + ui::px(8));
-    lv_obj_set_pos(badge_, 0, 0);
+    const int title_height = ui::line_height(Font::TITLE);
+    const int badge_height = ui::line_height(Font::BODY) + ui::px(8);
+    const int badge_width = std::min(width_ / 2, std::max(ui::px(32), ui::text_width(departure_.line, Font::BODY) + ui::px(12)));
+    lv_obj_clear_flag(title_, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_set_size(title_, width_, title_height);
+    lv_obj_set_pos(title_, 0, 0);
+    lv_obj_set_size(badge_, badge_width, badge_height);
+    lv_obj_set_pos(badge_, 0, title_height + ui::px(6));
     lv_obj_center(line_);
     lv_obj_set_size(destination_, width_, ui::line_height(Font::BODY));
-    lv_obj_set_pos(destination_, 0, ui::line_height(Font::TITLE) + ui::px(12));
+    lv_obj_set_pos(destination_, 0, title_height + badge_height + ui::px(12));
     lv_obj_set_size(when_, width_, ui::line_height(Font::VALUE));
-    lv_obj_set_pos(when_, 0, std::max(ui::line_height(Font::TITLE) + ui::line_height(Font::BODY) + ui::px(16),
+    lv_obj_set_pos(when_, 0, std::max(title_height + badge_height + ui::line_height(Font::BODY) + ui::px(16),
                                       height_ - ui::line_height(Font::VALUE)));
     clear_hidden();
   }
@@ -258,6 +276,7 @@ class NextDepartureTile : public tessera::Tile {
   void on_theme() override {
     lv_obj_set_style_bg_color(badge_, ui::color(theme::ACCENT), 0);
     ui::set_color(line_, theme::ON_ACCENT);
+    ui::set_color(title_, theme::INK);
     ui::set_color(destination_, theme::MUTED);
     ui::set_color(when_, theme::INK);
     on_tick(tessera::epoch());
@@ -276,6 +295,7 @@ class NextDepartureTile : public tessera::Tile {
   bool show_time_ = true;
   DepartureRow departure_;
   lv_obj_t *badge_{};
+  lv_obj_t *title_{};
   lv_obj_t *line_{};
   lv_obj_t *destination_{};
   lv_obj_t *when_{};
@@ -292,6 +312,7 @@ class NextDepartureTile : public tessera::Tile {
     ui::set_text(line_, "");
     ui::set_text(when_, "");
     lv_obj_add_flag(badge_, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_clear_flag(title_, LV_OBJ_FLAG_HIDDEN);
     lv_obj_add_flag(line_, LV_OBJ_FLAG_HIDDEN);
     lv_obj_clear_flag(destination_, LV_OBJ_FLAG_HIDDEN);
     lv_obj_add_flag(when_, LV_OBJ_FLAG_HIDDEN);
