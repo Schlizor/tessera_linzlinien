@@ -1,5 +1,5 @@
 id: linz_departures
-version: 0.2.0
+version: 0.2.1
 api: "0.12"
 icon: tram
 maintainer: schli
@@ -16,13 +16,13 @@ attributes: [cloud]
 privacy: https://github.com/Schlizor/tessera_linzlinien#privacy
 fetch:
   - id: stop_search
-    url: "https://www.linzag.at/static/XML_STOPFINDER_REQUEST?sessionID=0&locationServerActive=1&type_sf=any&name_sf={search}&outputFormat=JSON&coordOutputFormat=WGS84%5Bdd.ddddd%5D&limit=10"
+    url: "https://www.linzag.at/static/XML_STOPFINDER_REQUEST?sessionID=0&locationServerActive=1&type_sf=stop&name_sf={search}&outputFormat=JSON&coordOutputFormat=WGS84%5Bdd.ddddd%5D&limit=10"
     every: 1d
     map:
       items: "$.stopFinder.points[*]"
       value: ref.id
       label: name
-      where: { anyType: stop }
+      where: { type: stop }
   - id: departures
     url: "https://www.linzag.at/static/XML_DM_REQUEST?sessionID=0&locationServerActive=1&outputFormat=rapidJSON&depType=stopEvents&type_dm=any&name_dm={stop}&mode=direct&useRealtime=1&limit=40"
     every: 1m
