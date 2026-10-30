@@ -22,7 +22,7 @@ Die Haltestellensuche verwendet den offiziellen Linz-AG-Stopfinder. Die Auswahl 
 - Die Abfahrten werden hoechstens einmal pro Minute aktualisiert.
 - Bus, Obus und Strassenbahn werden gemeinsam nach der prognostizierten Abfahrtszeit sortiert.
 - Jede Zeile zeigt Linie, Ziel, Countdown und - wenn vorhanden - den Bahnsteig.
-- Das Tile **Naechste Abfahrt** eignet sich fuer kompakte 1x1- oder 2x1-Karten.
+- Das adaptive Tile zeigt auf 1x1 die naechste Abfahrt gross und wird auf breiteren Karten automatisch zur Liste.
 - Im Listen-Tile koennen optional eine Linie und bis zu zwei Richtungen gewaehlt werden.
 - Es koennen bis zu sechs Linien gleichzeitig ausgewaehlt werden.
 - Die exakte Abfahrtsuhrzeit kann zusaetzlich zum Countdown eingeblendet werden.

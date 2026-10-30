@@ -6,7 +6,8 @@
     "no_stop": "Select a stop",
     "now": "Now",
     "minutes": "{n} min",
-    "cancelled": "Cancelled"
+    "cancelled": "Cancelled",
+    "old": "Times may be old"
   },
   "app": {
     "name": "Linz Linien departures",

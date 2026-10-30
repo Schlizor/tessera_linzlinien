@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.0 - 2026-10-30
+- Architektur an das offizielle Tessera-Muster angepasst: ein adaptives Tile statt zweier separater Tile-Typen.
+- 1x1 zeigt die naechste Abfahrt gross, breite Karten zeigen automatisch eine Liste.
+- Veraltete Live-Daten werden als solche markiert.
+
 ## 0.5.2 - 2026-10-30
 - Ungueltiges `optional`-Feld aus den Richtungsoptionen entfernt.
 - Leere Richtungsfelder bleiben weiterhin automatisch optional.

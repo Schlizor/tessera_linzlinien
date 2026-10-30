@@ -6,7 +6,8 @@
     "no_stop": "Haltestelle auswaehlen",
     "now": "Jetzt",
     "minutes": "{n} Min.",
-    "cancelled": "Entfaellt"
+    "cancelled": "Entfaellt",
+    "old": "Daten koennen veraltet sein"
   },
   "app": {
     "name": "Linz Linien Abfahrten",
