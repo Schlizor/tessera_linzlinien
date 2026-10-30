@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ESPHome / PlatformIO build artefacts
+.esphome/
+.pio/
+build/
+dist/
+
+# Local environment and secrets
+.env
+.env.*
+secrets.yaml
+
+# Editor and operating-system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+

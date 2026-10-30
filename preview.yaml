@@ -1,0 +1,10 @@
+tiles:
+  - tile: departures
+    name: Hauptbahnhof
+    options: { stop: "60501720" }
+    data:
+      departures:
+        items:
+          - { line: "1", destination: "Universität", planned: "{now+5m}", estimated: "{now+6m}", platform: "1", realtime: true, cancelled: false }
+          - { line: "46", destination: "Froschberg", planned: "{now+12m}", estimated: "{now+12m}", platform: "3", realtime: true, cancelled: false }
+          - { line: "4", destination: "Schloss Traun", planned: "{now+18m}", estimated: "{now+20m}", platform: "0", realtime: true, cancelled: false }

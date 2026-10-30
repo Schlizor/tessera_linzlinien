@@ -1,0 +1,2 @@
+# The plugin has no additional ESPHome entities.  Its live data is supplied by
+# the manifest fetch and delivered to the tile by Tessera.

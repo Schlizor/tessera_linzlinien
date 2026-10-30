@@ -1,0 +1,42 @@
+id: linz_departures
+version: 0.1.0
+api: "0.24"
+icon: tram
+maintainer: schli
+license: MIT
+stage: beta
+topics: [travel]
+requires:
+  esphome: 2026.6.2
+boards: any
+flash_kb: 12
+permissions:
+  network: [www.linzag.at]
+attributes: [cloud]
+privacy: https://www.linzag.at/portal/de/privatsphaere
+fetch:
+  - id: departures
+    url: "https://www.linzag.at/static/XML_DM_REQUEST?sessionID=0&locationServerActive=1&outputFormat=rapidJSON&depType=stopEvents&type_dm=any&name_dm={stop}&mode=direct&useRealtime=1&limit=40"
+    every: 1m
+    map:
+      items: "$.stopEvents[*]"
+      fields:
+        line: transportation.number
+        destination: transportation.destination.name
+        planned: { path: departureTimePlanned, as: epoch }
+        estimated: { path: departureTimeEstimated, as: epoch }
+        platform: location.properties.platform
+        realtime: isRealtimeControlled
+        cancelled: isCancelled
+      sort: estimated
+      limit: 8
+tiles:
+  - id: departures
+    name: tile_name
+    icon: tram
+    sizes: { min: 2x1, max: 4x2 }
+    memory: 1400
+    data: departures
+    options:
+      - { id: stop, kind: text, label: stop, hint: stop_hint }
+    example: tile_example
