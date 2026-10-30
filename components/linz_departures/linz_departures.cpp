@@ -25,7 +25,8 @@ class DeparturesTile : public tessera::Tile {
   void create(const tessera::TileContext &c) override {
     width_ = c.width;
     height_ = c.height;
-    stop_ = c.options["stop"] | "";
+    // Choice options are sent as {value, label}; the value is the Linz AG stop ID.
+    stop_ = c.options["stop"]["value"] | "";
     for (int i = 0; i < 8; ++i) {
       rows_[i].line = ui::label(c.parent, Font::BODY_LARGE, theme::INK);
       rows_[i].destination = ui::label(c.parent, Font::BODY, theme::MUTED);

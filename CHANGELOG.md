@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.2 - 2026-10-30
+- Gespeicherte Haltestellen-Auswahl korrekt aus dem Tessera-Choice-Objekt gelesen.
+
 ## 0.2.1 - 2026-10-30
 - Haltestellensuche auf die tatsaechliche Linz-AG-Stopfinder-Struktur angepasst.
 - Stopfinder auf echte Haltestellen eingeschraenkt, damit die Auswahl eine gueltige Haltestellen-ID liefert.
