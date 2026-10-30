@@ -1,5 +1,5 @@
 id: linz_departures
-version: 0.4.0
+version: 0.5.0
 api: "0.12"
 icon: tram
 maintainer: schli
@@ -36,10 +36,8 @@ fetch:
         platform: location.properties.platform
         realtime: isRealtimeControlled
         cancelled: isCancelled
-      where:
-        line: "{line}"
       sort: estimated
-      limit: 8
+      limit: 40
   - id: lines
     url: "https://www.linzag.at/static/XML_DM_REQUEST?sessionID=0&locationServerActive=1&outputFormat=rapidJSON&depType=stopEvents&type_dm=any&name_dm={stop}&mode=direct&useRealtime=1&limit=40"
     every: 1h
@@ -71,6 +69,7 @@ tiles:
         options_from: stop_search
       - id: line
         kind: choice
+        multiple: 6
         label: line
         hint: line_hint
         options_from: lines
@@ -89,6 +88,11 @@ tiles:
         label: show_platform
         hint: show_platform_hint
         default: true
+      - id: show_time
+        kind: toggle
+        label: show_time
+        hint: show_time_hint
+        default: true
     example: tile_example
   - id: next
     name: next_tile_name
@@ -106,6 +110,7 @@ tiles:
         options_from: stop_search
       - id: line
         kind: choice
+        multiple: 6
         label: line
         hint: line_hint
         options_from: lines
@@ -123,5 +128,10 @@ tiles:
         kind: toggle
         label: show_platform
         hint: show_platform_hint
+        default: true
+      - id: show_time
+        kind: toggle
+        label: show_time
+        hint: show_time_hint
         default: true
     example: next_tile_example

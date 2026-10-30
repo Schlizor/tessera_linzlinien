@@ -1,9 +1,16 @@
 # Changelog
 
+## 0.5.0 - 2026-10-30
+- Mehrfachauswahl fuer bis zu sechs Linien hinzugefuegt.
+- Linienfilterung fuer Mehrfachauswahl robust ins Tile verlagert.
+- Exakte Abfahrtszeit neben dem Countdown integriert.
+
 ## 0.4.0 - 2026-10-30
 - Neues kompaktes „Naechste Abfahrt“-Tile fuer 1x1 und 2x1.
 - Zwei unabhaengige Richtungsfilter ergaenzt; beide Richtungen koennen gleichzeitig angezeigt werden.
+- Bis zu sechs Linien koennen gleichzeitig ausgewaehlt werden.
 - Option zum Ein- und Ausblenden der Bahnsteignummer hinzugefuegt.
+- Exakte Abfahrtsuhrzeit kann neben dem Countdown angezeigt werden.
 - Countdown- und Linien-Darstellung fuer kleine Karten optimiert.
 
 ## 0.3.0 - 2026-10-30

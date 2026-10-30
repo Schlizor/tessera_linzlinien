@@ -15,7 +15,7 @@
     "stop": "Haltestelle",
     "stop_hint": "Haltestellennamen eingeben und auswaehlen",
     "line": "Linie",
-    "line_hint": "Optional: nur eine Linie anzeigen",
+    "line_hint": "Optional: bis zu sechs Linien auswaehlen",
     "direction": "Richtung",
     "direction_hint": "Optional: nur ein Ziel anzeigen",
     "direction_a": "Richtung 1",
@@ -24,6 +24,8 @@
     "direction_b_hint": "Optional: zweites Ziel",
     "show_platform": "Bahnsteig anzeigen",
     "show_platform_hint": "Bahnsteignummer neben dem Countdown anzeigen",
+    "show_time": "Abfahrtszeit anzeigen",
+    "show_time_hint": "Exakte Uhrzeit zusaetzlich zum Countdown anzeigen",
     "next_tile_name": "Naechste Abfahrt",
     "next_tile_example": "Naechste Abfahrt einer Linzer Haltestelle",
     "tile_example": "Live-Abfahrten einer Linzer Haltestelle"

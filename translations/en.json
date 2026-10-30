@@ -15,7 +15,7 @@
     "stop": "Stop",
     "stop_hint": "Type a stop name and select it",
     "line": "Line",
-    "line_hint": "Optional: show only one line",
+    "line_hint": "Optional: select up to six lines",
     "direction": "Direction",
     "direction_hint": "Optional: show only one destination",
     "direction_a": "Direction 1",
@@ -24,6 +24,8 @@
     "direction_b_hint": "Optional second destination",
     "show_platform": "Show platform",
     "show_platform_hint": "Show the platform number beside the countdown",
+    "show_time": "Show departure time",
+    "show_time_hint": "Show the exact departure time as well as the countdown",
     "next_tile_name": "Next departure",
     "next_tile_example": "The next departure from a Linz stop",
     "tile_example": "Live departures from a Linz stop"

@@ -26,10 +26,18 @@ class DeparturesTile : public tessera::Tile {
     height_ = c.height;
     // Choice options are sent as {value, label}; the value is the Linz AG stop ID.
     stop_ = c.options["stop"]["value"] | "";
+    for (JsonObjectConst choice : c.options["line"].as<JsonArrayConst>()) {
+      lines_.push_back(choice["value"] | "");
+    }
+    if (lines_.empty()) {
+      const std::string single_line = c.options["line"]["value"] | "";
+      if (!single_line.empty()) lines_.push_back(single_line);
+    }
     direction_a_ = c.options["direction_a"]["value"] | "";
     if (direction_a_.empty()) direction_a_ = c.options["direction"]["value"] | "";
     direction_b_ = c.options["direction_b"]["value"] | "";
     show_platform_ = c.options["show_platform"] | true;
+    show_time_ = c.options["show_time"] | true;
     for (int i = 0; i < kMaxRows; ++i) make_row(rows_[i], c.parent);
   }
 
@@ -43,6 +51,7 @@ class DeparturesTile : public tessera::Tile {
       row.estimated = item["estimated"] | (item["planned"] | 0u);
       row.platform = item["platform"] | "";
       row.cancelled = item["cancelled"] | false;
+      if (!lines_.empty() && std::find(lines_.begin(), lines_.end(), row.line) == lines_.end()) continue;
       if (!direction_a_.empty() && row.destination != direction_a_ && row.destination != direction_b_) continue;
       if (departures_.size() >= kMaxRows) break;
       departures_.push_back(row);
@@ -77,6 +86,7 @@ class DeparturesTile : public tessera::Tile {
       } else {
         when = "--";
       }
+      if (show_time_ && departure.estimated) when = tessera::clock_text(departure.estimated) + "  " + when;
       if (show_platform_ && !departure.platform.empty()) when += "  " + departure.platform;
       place_row(rows_[i], departure.line, departure.destination, when, i * row_height);
     }
@@ -106,10 +116,12 @@ class DeparturesTile : public tessera::Tile {
   int width_ = 0;
   int height_ = 0;
   std::string stop_;
+  std::vector<std::string> lines_;
   std::string direction_a_;
   std::string direction_b_;
   std::string wait_;
   bool show_platform_ = true;
+  bool show_time_ = true;
   std::vector<DepartureRow> departures_;
   Row rows_[kMaxRows];
 
@@ -174,10 +186,18 @@ class NextDepartureTile : public tessera::Tile {
     width_ = c.width;
     height_ = c.height;
     stop_ = c.options["stop"]["value"] | "";
+    for (JsonObjectConst choice : c.options["line"].as<JsonArrayConst>()) {
+      lines_.push_back(choice["value"] | "");
+    }
+    if (lines_.empty()) {
+      const std::string single_line = c.options["line"]["value"] | "";
+      if (!single_line.empty()) lines_.push_back(single_line);
+    }
     direction_a_ = c.options["direction_a"]["value"] | "";
     direction_b_ = c.options["direction_b"]["value"] | "";
     if (direction_a_.empty()) direction_a_ = c.options["direction"]["value"] | "";
     show_platform_ = c.options["show_platform"] | true;
+    show_time_ = c.options["show_time"] | true;
     badge_ = ui::block(c.parent, theme::ACCENT);
     line_ = ui::label(badge_, Font::TITLE, theme::ON_ACCENT);
     destination_ = ui::label(c.parent, Font::BODY, theme::MUTED);
@@ -196,6 +216,7 @@ class NextDepartureTile : public tessera::Tile {
       candidate.estimated = item["estimated"] | (item["planned"] | 0u);
       candidate.platform = item["platform"] | "";
       candidate.cancelled = item["cancelled"] | false;
+      if (!lines_.empty() && std::find(lines_.begin(), lines_.end(), candidate.line) == lines_.end()) continue;
       if (!direction_a_.empty() && candidate.destination != direction_a_ && candidate.destination != direction_b_) continue;
       departure_ = candidate;
       break;
@@ -217,9 +238,11 @@ class NextDepartureTile : public tessera::Tile {
                                        ? plugin_->text("now")
                                        : tessera::format(plugin_->text("minutes"), (departure_.estimated - epoch) / 60);
     ui::set_text(line_, departure_.line);
-    ui::set_text(destination_, departure_.destination +
-                                  (show_platform_ && !departure_.platform.empty() ? "  ·  " + departure_.platform : ""));
-    ui::set_text(when_, when);
+    std::string destination = departure_.destination;
+    if (show_platform_ && !departure_.platform.empty()) destination += "  ·  " + departure_.platform;
+    if (show_time_) destination += "  ·  " + when;
+    ui::set_text(destination_, destination);
+    ui::set_text(when_, show_time_ && departure_.estimated ? tessera::clock_text(departure_.estimated) : when);
     const int badge_width = std::min(width_ / 2, std::max(ui::px(32), ui::text_width(departure_.line, Font::TITLE) + ui::px(12)));
     lv_obj_set_size(badge_, badge_width, ui::line_height(Font::TITLE) + ui::px(8));
     lv_obj_set_pos(badge_, 0, 0);
@@ -245,10 +268,12 @@ class NextDepartureTile : public tessera::Tile {
   int width_ = 0;
   int height_ = 0;
   std::string stop_;
+  std::vector<std::string> lines_;
   std::string direction_a_;
   std::string direction_b_;
   std::string wait_;
   bool show_platform_ = true;
+  bool show_time_ = true;
   DepartureRow departure_;
   lv_obj_t *badge_{};
   lv_obj_t *line_{};
