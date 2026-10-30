@@ -1,6 +1,6 @@
 id: linz_departures
 version: 0.1.0
-api: "0.24"
+api: "0.12"
 icon: tram
 maintainer: schli
 license: MIT
@@ -15,6 +15,14 @@ permissions:
 attributes: [cloud]
 privacy: https://www.linzag.at/portal/de/privatsphaere
 fetch:
+  - id: stop_search
+    url: "https://www.linzag.at/static/XML_STOPFINDER_REQUEST?sessionID=0&locationServerActive=1&type_sf=any&name_sf={search}&outputFormat=JSON&coordOutputFormat=WGS84%5Bdd.ddddd%5D&limit=10"
+    every: 1d
+    map:
+      items: "$.stopFinder.points[*]"
+      value: ref.id
+      label: name
+      where: { anyType: stop }
   - id: departures
     url: "https://www.linzag.at/static/XML_DM_REQUEST?sessionID=0&locationServerActive=1&outputFormat=rapidJSON&depType=stopEvents&type_dm=any&name_dm={stop}&mode=direct&useRealtime=1&limit=40"
     every: 1m
@@ -38,5 +46,10 @@ tiles:
     memory: 1400
     data: departures
     options:
-      - { id: stop, kind: text, label: stop, hint: stop_hint }
+      - id: stop
+        kind: choice
+        label: stop
+        hint: stop_hint
+        search: true
+        options_from: stop_search
     example: tile_example

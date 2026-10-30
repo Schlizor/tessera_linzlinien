@@ -1,17 +1,17 @@
-# Linz Linien Abfahrten für Tessera
+# Linz Linien Abfahrten fuer Tessera
 
-Ein Tessera-Plugin für Live-Abfahrten der Linz AG Linien. Es unterstützt Bus, Obus und Straßenbahn und zeigt pro Abfahrt Linie, Ziel, Countdown und – sofern vorhanden – den Bahnsteig.
+Ein Tessera-Plugin fuer Live-Abfahrten der LINZ AG Linien. Es unterstuetzt Bus, Obus und Strassenbahn und zeigt pro Abfahrt Linie, Ziel, Countdown und - sofern vorhanden - den Bahnsteig.
 
 ## Einrichtung
 
-1. Das Plugin in Tessera über einen Ordner oder GitHub-Link hinzufügen.
-2. Im Tile-Inspector die Linz-AG-Haltestellen-ID eintragen.
-3. Das Tile auf dem Panel platzieren.
+1. Das Plugin in Tessera ueber einen Ordner oder GitHub-Link hinzufuegen.
+2. Das Tile auf dem Panel platzieren.
+3. Im Tile-Inspector nach der gewuenschten Haltestelle suchen und sie aus der Liste auswaehlen.
 
-Die Haltestellen-ID kann über die Linz-AG-Suche ermittelt werden. Für `Hauptbahnhof` ist sie beispielsweise `60501720`.
+Eine Haltestellen-ID muss nicht bekannt sein. Tessera sucht die Haltestelle direkt ueber den offiziellen Linz-AG-Endpunkt und verwendet die interne ID automatisch.
 
-Die Daten werden höchstens einmal pro Minute über `www.linzag.at` aktualisiert. Die API-Antwort wird im Home-Assistant-Teil von Tessera abgerufen und auf die wenigen Felder reduziert, die das Panel benötigt.
+Die Daten werden hoechstens einmal pro Minute ueber `www.linzag.at` aktualisiert. Die API-Antwort wird im Home-Assistant-Teil von Tessera abgerufen und auf die wenigen Felder reduziert, die das Panel benoetigt.
 
 ## Datenschutz
 
-Für die Abfrage werden die Haltestellen-ID und die Anfrage an den öffentlichen Linz-AG-Endpunkt übertragen. Es werden keine Zugangsdaten benötigt.
+Fuer die Abfrage werden der eingegebene Haltestellenname und die Anfrage an den oeffentlichen Linz-AG-Endpunkt uebertragen. Es werden keine Zugangsdaten benoetigt.

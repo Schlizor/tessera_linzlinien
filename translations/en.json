@@ -3,7 +3,7 @@
   "screen": {
     "waiting": "Waiting for live data",
     "no_departures": "No departures",
-    "no_stop": "Enter a stop ID",
+    "no_stop": "Select a stop",
     "now": "Now",
     "minutes": "{n} min"
   },
@@ -11,8 +11,8 @@
     "name": "Linz Linien departures",
     "summary": "Live departures for Linz bus and tram stops.",
     "tile_name": "Departures",
-    "stop": "Stop ID",
-    "stop_hint": "Linz AG stop ID, for example 60501720",
+    "stop": "Stop",
+    "stop_hint": "Type a stop name and select it",
     "tile_example": "Live departures from a Linz stop"
   }
 }

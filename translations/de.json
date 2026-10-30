@@ -3,16 +3,16 @@
   "screen": {
     "waiting": "Warte auf Live-Daten",
     "no_departures": "Keine Abfahrten",
-    "no_stop": "Haltestellen-ID eingeben",
+    "no_stop": "Haltestelle auswaehlen",
     "now": "Jetzt",
     "minutes": "{n} Min."
   },
   "app": {
     "name": "Linz Linien Abfahrten",
-    "summary": "Live-Abfahrten für Bus- und Straßenbahnhaltestellen in Linz.",
+    "summary": "Live-Abfahrten fuer Bus- und Strassenbahnhaltestellen in Linz.",
     "tile_name": "Abfahrten",
-    "stop": "Haltestellen-ID",
-    "stop_hint": "Linz-AG-Haltestellen-ID, zum Beispiel 60501720",
+    "stop": "Haltestelle",
+    "stop_hint": "Haltestellennamen eingeben und auswaehlen",
     "tile_example": "Live-Abfahrten einer Linzer Haltestelle"
   }
 }
