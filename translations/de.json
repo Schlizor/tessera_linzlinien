@@ -5,7 +5,8 @@
     "no_departures": "Keine Abfahrten",
     "no_stop": "Haltestelle auswaehlen",
     "now": "Jetzt",
-    "minutes": "{n} Min."
+    "minutes": "{n} Min.",
+    "cancelled": "Entfaellt"
   },
   "app": {
     "name": "Linz Linien Abfahrten",
@@ -13,6 +14,10 @@
     "tile_name": "Abfahrten",
     "stop": "Haltestelle",
     "stop_hint": "Haltestellennamen eingeben und auswaehlen",
+    "line": "Linie",
+    "line_hint": "Optional: nur eine Linie anzeigen",
+    "direction": "Richtung",
+    "direction_hint": "Optional: nur ein Ziel anzeigen",
     "tile_example": "Live-Abfahrten einer Linzer Haltestelle"
   }
 }

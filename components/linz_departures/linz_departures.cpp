@@ -1,7 +1,6 @@
 #include "linz_departures.h"
 
 #include <algorithm>
-#include <cstdio>
 #include <string>
 #include <vector>
 
@@ -27,19 +26,14 @@ class DeparturesTile : public tessera::Tile {
     height_ = c.height;
     // Choice options are sent as {value, label}; the value is the Linz AG stop ID.
     stop_ = c.options["stop"]["value"] | "";
-    for (int i = 0; i < 8; ++i) {
-      rows_[i].line = ui::label(c.parent, Font::BODY_LARGE, theme::INK);
-      rows_[i].destination = ui::label(c.parent, Font::BODY, theme::MUTED);
-      lv_obj_set_width(rows_[i].line, width_);
-      lv_obj_set_width(rows_[i].destination, width_);
-    }
+    for (int i = 0; i < kMaxRows; ++i) make_row(rows_[i], c.parent);
   }
 
   void on_state(JsonObjectConst data) override {
     departures_.clear();
     wait_ = data["wait"] | "";
     for (JsonObjectConst item : data["items"].as<JsonArrayConst>()) {
-      if (departures_.size() >= 8) break;
+      if (departures_.size() >= kMaxRows) break;
       DepartureRow row;
       row.line = item["line"] | "?";
       row.destination = item["destination"] | "?";
@@ -60,67 +54,107 @@ class DeparturesTile : public tessera::Tile {
       return;
     }
 
-    const int line_height = ui::line_height(Font::BODY_LARGE);
-    const int destination_height = ui::line_height(Font::BODY);
-    const int row_height = line_height + destination_height + ui::px(4);
-    const int visible = std::min(8, std::max(1, height_ / row_height));
-    for (int i = 0; i < 8; ++i) {
+    const int row_height = std::max(ui::line_height(Font::TITLE), ui::line_height(Font::BODY)) + ui::px(8);
+    const int visible = std::min(kMaxRows, std::max(1, height_ / row_height));
+    for (int i = 0; i < kMaxRows; ++i) {
       if (i >= visible || i >= static_cast<int>(departures_.size())) {
-        lv_obj_add_flag(rows_[i].line, LV_OBJ_FLAG_HIDDEN);
-        lv_obj_add_flag(rows_[i].destination, LV_OBJ_FLAG_HIDDEN);
+        hide_row(rows_[i]);
         continue;
       }
-      lv_obj_clear_flag(rows_[i].line, LV_OBJ_FLAG_HIDDEN);
-      lv_obj_clear_flag(rows_[i].destination, LV_OBJ_FLAG_HIDDEN);
-      const DepartureRow &row = departures_[i];
+      const DepartureRow &departure = departures_[i];
       std::string when;
-      if (row.cancelled) {
-        when = "X";
-      } else if (epoch && row.estimated <= epoch + 30) {
+      if (departure.cancelled) {
+        when = plugin_->text("cancelled");
+      } else if (epoch && departure.estimated <= epoch + 30) {
         when = plugin_->text("now");
-      } else if (epoch && row.estimated > epoch) {
-        when = tessera::format(plugin_->text("minutes"), (row.estimated - epoch) / 60);
+      } else if (epoch && departure.estimated > epoch) {
+        when = tessera::format(plugin_->text("minutes"), (departure.estimated - epoch) / 60);
       } else {
         when = "--";
       }
-      std::string line = row.line + "  " + when;
-      if (!row.platform.empty()) line += "  " + row.platform;
-      ui::set_text(rows_[i].line, line);
-      ui::set_text(rows_[i].destination, row.destination);
-      lv_obj_set_pos(rows_[i].line, 0, i * row_height);
-      lv_obj_set_pos(rows_[i].destination, 0, i * row_height + line_height);
-      lv_obj_set_height(rows_[i].line, line_height);
-      lv_obj_set_height(rows_[i].destination, destination_height);
+      if (!departure.platform.empty()) when += "  " + departure.platform;
+      place_row(rows_[i], departure.line, departure.destination, when, i * row_height);
     }
   }
 
   void on_theme() override {
     for (auto &row : rows_) {
-      ui::set_color(row.line, theme::INK);
-      ui::set_color(row.destination, theme::MUTED);
+      lv_obj_set_style_bg_color(row.badge, ui::color(theme::ACCENT), 0);
+      ui::set_color(row.line, theme::ON_ACCENT);
+      ui::set_color(row.destination, theme::INK);
+      ui::set_color(row.when, theme::MUTED);
     }
     on_tick(tessera::epoch());
   }
 
  private:
-  struct Labels { lv_obj_t *line{}; lv_obj_t *destination{}; } rows_[8];
+  static constexpr int kMaxRows = 8;
+
+  struct Row {
+    lv_obj_t *badge{};
+    lv_obj_t *line{};
+    lv_obj_t *destination{};
+    lv_obj_t *when{};
+  };
+
   const tessera::Plugin *plugin_;
-  int width_ = 0, height_ = 0;
-  std::string stop_, wait_;
+  int width_ = 0;
+  int height_ = 0;
+  std::string stop_;
+  std::string wait_;
   std::vector<DepartureRow> departures_;
+  Row rows_[kMaxRows];
+
+  void make_row(Row &row, lv_obj_t *parent) {
+    row.badge = ui::block(parent, theme::ACCENT);
+    row.line = ui::label(row.badge, Font::TITLE, theme::ON_ACCENT);
+    row.destination = ui::label(parent, Font::BODY, theme::INK);
+    row.when = ui::label(parent, Font::BODY, theme::MUTED);
+    lv_label_set_long_mode(row.line, LV_LABEL_LONG_CLIP);
+    lv_label_set_long_mode(row.destination, LV_LABEL_LONG_DOT);
+    lv_label_set_long_mode(row.when, LV_LABEL_LONG_CLIP);
+    lv_obj_set_style_text_align(row.when, LV_TEXT_ALIGN_RIGHT, 0);
+    hide_row(row);
+  }
+
+  void place_row(Row &row, const std::string &line, const std::string &destination, const std::string &when, int y) {
+    const int row_height = std::max(ui::line_height(Font::TITLE), ui::line_height(Font::BODY)) + ui::px(8);
+    const int pad = ui::px(6);
+    const int badge_width = std::min(width_ / 3, std::max(ui::px(28), ui::text_width(line, Font::TITLE) + pad * 2));
+    const int when_width = std::min(width_ / 2, ui::text_width(when, Font::BODY) + ui::px(2));
+    const int destination_x = badge_width + ui::px(8);
+    const int destination_width = std::max(ui::px(20), width_ - destination_x - when_width - ui::px(8));
+    const int text_y = y + (row_height - ui::line_height(Font::BODY)) / 2;
+
+    lv_obj_clear_flag(row.badge, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_clear_flag(row.line, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_clear_flag(row.destination, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_clear_flag(row.when, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_set_size(row.badge, badge_width, row_height);
+    lv_obj_set_pos(row.badge, 0, y);
+    lv_obj_center(row.line);
+    lv_obj_set_size(row.destination, destination_width, ui::line_height(Font::BODY));
+    lv_obj_set_pos(row.destination, destination_x, text_y);
+    lv_obj_set_size(row.when, when_width, ui::line_height(Font::BODY));
+    lv_obj_set_pos(row.when, width_ - when_width, text_y);
+    ui::set_text(row.line, line);
+    ui::set_text(row.destination, destination);
+    ui::set_text(row.when, when);
+  }
+
+  void hide_row(Row &row) {
+    lv_obj_add_flag(row.badge, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_add_flag(row.line, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_add_flag(row.destination, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_add_flag(row.when, LV_OBJ_FLAG_HIDDEN);
+  }
 
   void paint_message(const std::string &message) {
-    for (int i = 0; i < 8; ++i) {
-      if (i == 0) {
-        lv_obj_clear_flag(rows_[i].line, LV_OBJ_FLAG_HIDDEN);
-        lv_obj_add_flag(rows_[i].destination, LV_OBJ_FLAG_HIDDEN);
-        ui::set_text(rows_[i].line, message);
-        lv_obj_set_pos(rows_[i].line, 0, std::max(0, (height_ - ui::line_height(Font::BODY_LARGE)) / 2));
-      } else {
-        lv_obj_add_flag(rows_[i].line, LV_OBJ_FLAG_HIDDEN);
-        lv_obj_add_flag(rows_[i].destination, LV_OBJ_FLAG_HIDDEN);
-      }
-    }
+    for (int i = 0; i < kMaxRows; ++i) hide_row(rows_[i]);
+    lv_obj_clear_flag(rows_[0].destination, LV_OBJ_FLAG_HIDDEN);
+    ui::set_text(rows_[0].destination, message);
+    lv_obj_set_pos(rows_[0].destination, 0, std::max(0, (height_ - ui::line_height(Font::BODY)) / 2));
+    lv_obj_set_width(rows_[0].destination, width_);
   }
 };
 

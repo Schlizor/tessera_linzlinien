@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0 - 2026-10-30
+- Abfahrtsliste mit farbigen Linien-Badges, Ziel, Countdown und Bahnsteig neu gestaltet.
+- Optionale Filter fuer Linie und Richtung ergaenzt.
+- Linien und Richtungen werden aus den Live-Daten der ausgewaehlten Haltestelle geladen.
+- Editor-Vorschau an die neue Listenoptik angepasst.
+
 ## 0.2.2 - 2026-10-30
 - Gespeicherte Haltestellen-Auswahl korrekt aus dem Tessera-Choice-Objekt gelesen.
 

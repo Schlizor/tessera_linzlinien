@@ -5,7 +5,8 @@
     "no_departures": "No departures",
     "no_stop": "Select a stop",
     "now": "Now",
-    "minutes": "{n} min"
+    "minutes": "{n} min",
+    "cancelled": "Cancelled"
   },
   "app": {
     "name": "Linz Linien departures",
@@ -13,6 +14,10 @@
     "tile_name": "Departures",
     "stop": "Stop",
     "stop_hint": "Type a stop name and select it",
+    "line": "Line",
+    "line_hint": "Optional: show only one line",
+    "direction": "Direction",
+    "direction_hint": "Optional: show only one destination",
     "tile_example": "Live departures from a Linz stop"
   }
 }
