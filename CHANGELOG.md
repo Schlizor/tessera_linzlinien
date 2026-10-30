@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0 - 2026-10-30
+- Neues kompaktes „Naechste Abfahrt“-Tile fuer 1x1 und 2x1.
+- Zwei unabhaengige Richtungsfilter ergaenzt; beide Richtungen koennen gleichzeitig angezeigt werden.
+- Option zum Ein- und Ausblenden der Bahnsteignummer hinzugefuegt.
+- Countdown- und Linien-Darstellung fuer kleine Karten optimiert.
+
 ## 0.3.0 - 2026-10-30
 - Abfahrtsliste mit farbigen Linien-Badges, Ziel, Countdown und Bahnsteig neu gestaltet.
 - Optionale Filter fuer Linie und Richtung ergaenzt.

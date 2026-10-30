@@ -1,5 +1,5 @@
 id: linz_departures
-version: 0.3.0
+version: 0.4.0
 api: "0.12"
 icon: tram
 maintainer: schli
@@ -9,7 +9,7 @@ topics: [travel]
 requires:
   esphome: 2026.6.2
 boards: any
-flash_kb: 12
+flash_kb: 16
 permissions:
   network: [www.linzag.at]
 attributes: [cloud]
@@ -38,7 +38,6 @@ fetch:
         cancelled: isCancelled
       where:
         line: "{line}"
-        destination: "{direction}"
       sort: estimated
       limit: 8
   - id: lines
@@ -75,9 +74,54 @@ tiles:
         label: line
         hint: line_hint
         options_from: lines
-      - id: direction
+      - id: direction_a
         kind: choice
-        label: direction
-        hint: direction_hint
+        label: direction_a
+        hint: direction_a_hint
         options_from: directions
+      - id: direction_b
+        kind: choice
+        label: direction_b
+        hint: direction_b_hint
+        options_from: directions
+      - id: show_platform
+        kind: toggle
+        label: show_platform
+        hint: show_platform_hint
+        default: true
     example: tile_example
+  - id: next
+    name: next_tile_name
+    icon: tram
+    sizes: { min: 1x1, max: 2x1 }
+    memory: 900
+    data: departures
+    preview: { badge: "{line}", title: "{destination}", countdown: estimated }
+    options:
+      - id: stop
+        kind: choice
+        label: stop
+        hint: stop_hint
+        search: true
+        options_from: stop_search
+      - id: line
+        kind: choice
+        label: line
+        hint: line_hint
+        options_from: lines
+      - id: direction_a
+        kind: choice
+        label: direction_a
+        hint: direction_a_hint
+        options_from: directions
+      - id: direction_b
+        kind: choice
+        label: direction_b
+        hint: direction_b_hint
+        options_from: directions
+      - id: show_platform
+        kind: toggle
+        label: show_platform
+        hint: show_platform_hint
+        default: true
+    example: next_tile_example

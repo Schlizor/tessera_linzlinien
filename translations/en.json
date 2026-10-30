@@ -18,6 +18,14 @@
     "line_hint": "Optional: show only one line",
     "direction": "Direction",
     "direction_hint": "Optional: show only one destination",
+    "direction_a": "Direction 1",
+    "direction_a_hint": "Optional first destination",
+    "direction_b": "Direction 2",
+    "direction_b_hint": "Optional second destination",
+    "show_platform": "Show platform",
+    "show_platform_hint": "Show the platform number beside the countdown",
+    "next_tile_name": "Next departure",
+    "next_tile_example": "The next departure from a Linz stop",
     "tile_example": "Live departures from a Linz stop"
   }
 }
