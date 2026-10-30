@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.2 - 2026-10-30
+- Ungueltiges `optional`-Feld aus den Richtungsoptionen entfernt.
+- Leere Richtungsfelder bleiben weiterhin automatisch optional.
+
 ## 0.5.1 - 2026-10-30
 - Richtungsfilter koennen nach der Auswahl wieder abgewaehlt werden.
 - Die Tiles erhalten klare Titel und eine staerkere typografische Hierarchie.
