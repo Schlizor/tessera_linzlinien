@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.1 - 2026-10-31
+- Plugin-Manifest für den Tessera-Checker korrigiert.
+- Store-Bild auf die zulässige Dateigröße reduziert.
+
 ## 0.8.0 - 2026-10-31
 - Echtzeit-Hinweise und längere LINZ-AG-Informationen aus `hints` und `infos` übernommen.
 - Verspätungen aus geplanter und prognostizierter Abfahrtszeit berechnet und angezeigt.

@@ -6,7 +6,7 @@ Live-Abfahrten der LINZ AG Linien auf Tessera-Panels. Das Plugin zeigt Bus, Obus
 
 [Changelog](CHANGELOG.md) · [Validierung](VALIDATION.md) · [Lizenz](LICENSE)
 
-## Einrichtung
+## Set up
 
 1. In Tessera unter **Plugins** auf **Add with a link** gehen.
 2. `https://github.com/Schlizor/tessera_linzlinien` einfuegen.

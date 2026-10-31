@@ -99,7 +99,6 @@ class DeparturesTile : public tessera::Tile {
       departure.platform = item["platform"] | "";
       collect_info(item["hints"], departure.info);
       collect_info(item["info_links"], departure.info);
-      collect_info(item["info_subtitles"], departure.info);
       if (departure.planned && departure.at > departure.planned + 60)
         departure.delay = static_cast<int>((departure.at - departure.planned + 30) / 60);
       departure.cancelled = item["cancelled"] | false;

@@ -1,5 +1,5 @@
 id: linz_departures
-version: 0.8.0
+version: 0.8.1
 api: "0.12"
 icon: tram
 maintainer: schli
@@ -34,11 +34,9 @@ fetch:
         planned: { path: departureTimePlanned, as: epoch }
         estimated: { path: departureTimeEstimated, as: epoch }
         platform: location.properties.platform
-        realtime: isRealtimeControlled
         cancelled: isCancelled
         hints: hints[*].content
         info_links: infos[*].infoLinks[*].urlText
-        info_subtitles: infos[*].infoLinks[*].subtitle
       sort: estimated
       limit: 40
   - id: lines
