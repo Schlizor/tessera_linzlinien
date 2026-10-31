@@ -14,9 +14,36 @@ struct Departure {
   std::string line;
   std::string destination;
   std::string platform;
+  std::string info;
+  uint32_t planned = 0;
   uint32_t at = 0;
+  int delay = 0;
   bool cancelled = false;
 };
+
+static void append_info(std::string &result, const std::string &value) {
+  if (value.empty() || result.find(value) != std::string::npos) return;
+  if (!result.empty()) result += "  ·  ";
+  result += value;
+}
+
+static void collect_info(JsonVariantConst value, std::string &result) {
+  if (value.is<const char *>()) {
+    const char *text = value.as<const char *>();
+    if (text) append_info(result, text);
+    return;
+  }
+  if (value.is<JsonArrayConst>()) {
+    for (JsonVariantConst item : value.as<JsonArrayConst>()) collect_info(item, result);
+    return;
+  }
+  if (!value.is<JsonObjectConst>()) return;
+  JsonObjectConst object = value.as<JsonObjectConst>();
+  collect_info(object["content"], result);
+  collect_info(object["urlText"], result);
+  collect_info(object["subtitle"], result);
+  collect_info(object["infoLinks"], result);
+}
 
 class DeparturesTile : public tessera::Tile {
  public:
@@ -67,8 +94,13 @@ class DeparturesTile : public tessera::Tile {
       Departure departure;
       departure.line = item["line"] | "";
       departure.destination = item["destination"] | "";
+      departure.planned = item["planned"] | 0u;
       departure.at = item["estimated"] | (item["planned"] | 0u);
       departure.platform = item["platform"] | "";
+      collect_info(item["hints"], departure.info);
+      collect_info(item["infos"], departure.info);
+      if (departure.planned && departure.at > departure.planned + 60)
+        departure.delay = static_cast<int>((departure.at - departure.planned + 30) / 60);
       departure.cancelled = item["cancelled"] | false;
       if (!departure.at || departure.line.empty() || departure.cancelled) continue;
       if (!lines_.empty() && std::find(lines_.begin(), lines_.end(), departure.line) == lines_.end()) continue;
@@ -78,6 +110,20 @@ class DeparturesTile : public tessera::Tile {
     }
     std::sort(departures_.begin(), departures_.end(), [](const Departure &a, const Departure &b) { return a.at < b.at; });
     if (departures_.size() > kMaxRows) departures_.resize(kMaxRows);
+    notice_.clear();
+    for (const auto &departure : departures_) {
+      if (!departure.info.empty()) {
+        notice_ = departure.info;
+        break;
+      }
+    }
+  }
+
+  void on_tap() override {
+    if (!plugin_) return;
+    const std::string card_title = title_.empty() ? plugin_->text("details_title") : title_;
+    plugin_->set_details(card_title, details_text());
+    tessera::open_card(plugin_->plugin_id(), "details", "", -1, card_title);
   }
 
   void on_tick(uint32_t now) override {
@@ -130,6 +176,7 @@ class DeparturesTile : public tessera::Tile {
   std::string stop_;
   std::string title_;
   std::string platform_;
+  std::string notice_;
   std::string direction_a_;
   std::string direction_b_;
   std::string wait_;
@@ -182,6 +229,7 @@ class DeparturesTile : public tessera::Tile {
     const std::string left = countdown(departure.at, now, exact);
     std::string result = show_time_ ? tessera::clock_text(departure.at) + "  " + left : left;
     if (show_platform_ && !departure.platform.empty()) result += "  " + departure.platform;
+    if (departure.delay > 0) result += "  " + tessera::format(plugin_->text("delay"), departure.delay);
     return result;
   }
 
@@ -218,7 +266,7 @@ class DeparturesTile : public tessera::Tile {
         place_row(rows_[i], departures_[i].line, departures_[i].destination, when_text(departures_[i], now));
       }
     }
-    if (note_) ui::set_text(note_, stale_ ? plugin_->text("old") : "");
+    if (note_) ui::set_text(note_, !notice_.empty() ? notice_ : (stale_ ? plugin_->text("old") : ""));
   }
 
   void paint_single(const char *why, uint32_t now) {
@@ -236,18 +284,55 @@ class DeparturesTile : public tessera::Tile {
     const int room = height_ - title_height_ - head_ - ui::line_height(Font::BODY);
     lv_obj_set_height(big_, ui::line_height(Font::VALUE));
     lv_obj_set_pos(big_, 0, title_height_ + head_ + std::max(0, (room - ui::line_height(Font::VALUE)) / 2));
-    std::string later = countdown(next.at, now);
-    for (size_t i = 1; i < departures_.size() && i < 3; ++i) {
-      later += "  ·  " + countdown(departures_[i].at, now);
+    std::string later = notice_;
+    if (later.empty()) {
+      later = countdown(next.at, now);
+      for (size_t i = 1; i < departures_.size() && i < 3; ++i) {
+        later += "  ·  " + countdown(departures_[i].at, now);
+      }
     }
     ui::set_text(later_, later);
   }
+
+  std::string details_text() const {
+    std::string result;
+    for (const auto &departure : departures_) {
+      if (!result.empty()) result += "\n\n";
+      result += departure.line + "  " + departure.destination + "\n";
+      result += when_text(departure, tessera::epoch());
+      if (departure.cancelled) result += "  " + std::string(plugin_->text("cancelled"));
+      if (!departure.info.empty()) result += "\n" + departure.info;
+    }
+    if (result.empty()) result = notice_.empty() ? plugin_->text("no_departures") : notice_;
+    return result;
+  }
+};
+
+class DetailsCard : public tessera::Card {
+ public:
+  explicit DetailsCard(const LinzDepartures *plugin) : plugin_(plugin) {}
+
+  void open(const tessera::CardContext &c) override {
+    text_ = ui::text(c.parent, Font::BODY, theme::INK);
+    lv_obj_set_size(text_, c.width, c.height);
+    lv_obj_set_pos(text_, 0, 0);
+    ui::set_text(text_, plugin_->detail_text());
+  }
+
+  void on_theme() override {
+    if (text_) ui::set_color(text_, theme::INK);
+  }
+
+ private:
+  const LinzDepartures *plugin_;
+  lv_obj_t *text_{};
 };
 
 void LinzDepartures::setup() {
   // One adaptive tile, as in Tessera's official public-transport plugin: single-cell cards show the next departure,
   // wider cards become a list automatically.
   add_tile("next", [this]() { return new DeparturesTile(this); });
+  add_card("details", [this]() { return new DetailsCard(this); });
 }
 
 }  // namespace esphome::linz_departures

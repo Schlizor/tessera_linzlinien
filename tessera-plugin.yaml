@@ -1,5 +1,5 @@
 id: linz_departures
-version: 0.7.0
+version: 0.8.0
 api: "0.12"
 icon: tram
 maintainer: schli
@@ -36,6 +36,8 @@ fetch:
         platform: location.properties.platform
         realtime: isRealtimeControlled
         cancelled: isCancelled
+        hints: hints
+        infos: infos
       sort: estimated
       limit: 40
   - id: lines
@@ -102,3 +104,6 @@ tiles:
         hint: show_time_hint
         default: true
     example: next_tile_example
+
+cards:
+  - { id: details, name: details_card }

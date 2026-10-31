@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.0 - 2026-10-31
+- Echtzeit-Hinweise und längere LINZ-AG-Informationen aus `hints` und `infos` übernommen.
+- Verspätungen aus geplanter und prognostizierter Abfahrtszeit berechnet und angezeigt.
+- Tap auf die Kachel öffnet eine Detailkarte mit den Abfahrts- und Störungsinformationen.
+
 ## 0.7.0 - 2026-10-31
 - Frei beschreibbarer Titel fuer jede Abfahrtskarte hinzugefuegt.
 - Optionaler Bahnsteigfilter hinzugefuegt; die Werte werden wie von der Linz-AG geliefert eingegeben, zum Beispiel `0` oder `1`.

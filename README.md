@@ -29,6 +29,7 @@ Die Haltestellensuche verwendet den offiziellen Linz-AG-Stopfinder. Die Auswahl 
 - Jede Karte kann einen eigenen Titel anzeigen und optional auf einen Bahnsteig beziehungsweise eine Richtung eingeschraenkt werden.
 - Es koennen bis zu sechs Linien gleichzeitig ausgewaehlt werden.
 - Die exakte Abfahrtsuhrzeit kann zusaetzlich zum Countdown eingeblendet werden.
+- Echtzeit-Hinweise und Verspaetungen werden klein in der Karte angezeigt; ein Tippen auf die Karte oeffnet die Abfahrtsdetails.
 - Die Bahnsteiganzeige kann pro Tile deaktiviert werden.
 - Bei fehlenden Live-Daten bleibt die letzte erfolgreiche Antwort erhalten, soweit Tessera sie als veraltete Antwort liefert.
 - Das Tile passt sich an die verfuegbare Hoehe an; groessere Tiles zeigen mehr Abfahrten.

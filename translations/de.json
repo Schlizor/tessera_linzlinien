@@ -35,6 +35,9 @@
     "next_departure_title": "Naechste Abfahrt",
     "next_tile_name": "Naechste Abfahrt",
     "next_tile_example": "Naechste Abfahrt einer Linzer Haltestelle",
+    "details_card": "Abfahrtsdetails",
+    "details_title": "Abfahrtsdetails",
+    "delay": "+{n} Min.",
     "tile_example": "Live-Abfahrten einer Linzer Haltestelle"
   }
 }

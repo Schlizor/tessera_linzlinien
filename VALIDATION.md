@@ -9,6 +9,7 @@
 - The stop finder map returns `ref.id` values and filters to transport stops.
 - The departures map reads `stopEvents[*]` and maps live/planned times as epochs.
 - The tile supports a free-form title and optional platform filter alongside the line filter.
+- The departures map also carries LINZ AG `hints` and `infos` into the tile for delay and disruption details.
 
 ## Live API smoke test
 

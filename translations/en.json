@@ -35,6 +35,9 @@
     "next_departure_title": "Next departure",
     "next_tile_name": "Next departure",
     "next_tile_example": "The next departure from a Linz stop",
+    "details_card": "Departure details",
+    "details_title": "Departure details",
+    "delay": "+{n} min",
     "tile_example": "Live departures from a Linz stop"
   }
 }
