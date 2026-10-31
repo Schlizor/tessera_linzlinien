@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.8.2 - 2026-10-31
+- Buildfehler beim Öffnen der Detailkarte behoben.
+
 ## 0.8.1 - 2026-10-31
 - Plugin-Manifest für den Tessera-Checker korrigiert.
 - Store-Bild auf die zulässige Dateigröße reduziert.

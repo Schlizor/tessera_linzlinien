@@ -47,7 +47,7 @@ static void collect_info(JsonVariantConst value, std::string &result) {
 
 class DeparturesTile : public tessera::Tile {
  public:
-  explicit DeparturesTile(const tessera::Plugin *plugin) : plugin_(plugin) {}
+  explicit DeparturesTile(LinzDepartures *plugin) : plugin_(plugin) {}
 
   void create(const tessera::TileContext &c) override {
     width_ = c.width;
@@ -163,7 +163,7 @@ class DeparturesTile : public tessera::Tile {
     int y = 0;
   };
 
-  const tessera::Plugin *plugin_;
+  LinzDepartures *plugin_;
   int width_ = 0;
   int height_ = 0;
   int head_ = 0;
