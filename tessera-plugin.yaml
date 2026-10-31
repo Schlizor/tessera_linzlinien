@@ -1,5 +1,5 @@
 id: linz_departures
-version: 0.6.0
+version: 0.7.0
 api: "0.12"
 icon: tram
 maintainer: schli
@@ -61,12 +61,20 @@ tiles:
     data: departures
     preview: { badge: "{line}", title: "{destination}", countdown: estimated }
     options:
+      - id: title
+        kind: text
+        label: title
+        hint: title_hint
       - id: stop
         kind: choice
         label: stop
         hint: stop_hint
         search: true
         options_from: stop_search
+      - id: platform
+        kind: text
+        label: platform
+        hint: platform_hint
       - id: line
         kind: choice
         multiple: 6

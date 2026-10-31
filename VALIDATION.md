@@ -8,6 +8,7 @@
 - The manifest uses plugin API `0.12`, matching the searchable-choice feature.
 - The stop finder map returns `ref.id` values and filters to transport stops.
 - The departures map reads `stopEvents[*]` and maps live/planned times as epochs.
+- The tile supports a free-form title and optional platform filter alongside the line filter.
 
 ## Live API smoke test
 

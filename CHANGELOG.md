@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.0 - 2026-10-31
+- Frei beschreibbarer Titel fuer jede Abfahrtskarte hinzugefuegt.
+- Optionaler Bahnsteigfilter hinzugefuegt; die Werte werden wie von der Linz-AG geliefert eingegeben, zum Beispiel `0` oder `1`.
+- Die bestehende Mehrfachauswahl fuer Linien bleibt als zusaetzlicher Filter erhalten.
+
 ## 0.6.0 - 2026-10-30
 - Architektur an das offizielle Tessera-Muster angepasst: ein adaptives Tile statt zweier separater Tile-Typen.
 - 1x1 zeigt die naechste Abfahrt gross, breite Karten zeigen automatisch eine Liste.

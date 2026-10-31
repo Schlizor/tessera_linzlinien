@@ -27,21 +27,30 @@ class DeparturesTile : public tessera::Tile {
     height_ = c.height;
     list_ = c.columns >= 2;
     stop_ = c.options["stop"]["value"] | "";
+    title_ = c.options["title"]["value"] | "";
+    if (title_.empty()) title_ = c.options["title"] | "";
     read_options(c.options);
 
     head_ = std::max(ui::line_height(Font::TITLE), ui::line_height(Font::BODY)) + ui::px(4);
     gap_ = ui::px(ui::large() ? 8 : 5);
+    title_height_ = title_.empty() ? 0 : ui::line_height(Font::TITLE) + ui::px(4);
+    if (!title_.empty()) {
+      title_label_ = ui::label(c.parent, Font::TITLE, theme::INK);
+      ui::set_text(title_label_, title_);
+      lv_obj_set_size(title_label_, width_, ui::line_height(Font::TITLE));
+      lv_obj_set_pos(title_label_, 0, 0);
+    }
     if (list_) {
       const int row_height = head_ + gap_;
-      const int count = std::max(1, std::min(kMaxRows, (height_ + gap_) / row_height));
+      const int count = std::max(1, std::min(kMaxRows, (height_ - title_height_ + gap_) / row_height));
       rows_.resize(count);
-      for (int i = 0; i < count; ++i) make_row(rows_[i], c.parent, i * row_height);
+      for (int i = 0; i < count; ++i) make_row(rows_[i], c.parent, title_height_ + i * row_height);
       note_ = ui::label(c.parent, Font::BODY, theme::MUTED);
       lv_obj_set_size(note_, width_, ui::line_height(Font::BODY));
       lv_obj_set_pos(note_, 0, height_ - ui::line_height(Font::BODY));
     } else {
       rows_.resize(1);
-      make_row(rows_[0], c.parent, 0);
+      make_row(rows_[0], c.parent, title_height_);
       big_ = ui::label(c.parent, Font::VALUE, theme::INK);
       later_ = ui::label(c.parent, Font::BODY, theme::MUTED);
       lv_obj_set_width(big_, width_);
@@ -64,6 +73,7 @@ class DeparturesTile : public tessera::Tile {
       if (!departure.at || departure.line.empty() || departure.cancelled) continue;
       if (!lines_.empty() && std::find(lines_.begin(), lines_.end(), departure.line) == lines_.end()) continue;
       if (!direction_a_.empty() && departure.destination != direction_a_ && departure.destination != direction_b_) continue;
+      if (!platform_.empty() && departure.platform != platform_) continue;
       departures_.push_back(departure);
     }
     std::sort(departures_.begin(), departures_.end(), [](const Departure &a, const Departure &b) { return a.at < b.at; });
@@ -89,6 +99,7 @@ class DeparturesTile : public tessera::Tile {
       ui::set_color(row.destination, list_ ? theme::INK : theme::MUTED);
       if (row.when) ui::set_color(row.when, theme::INK);
     }
+    if (title_label_) ui::set_color(title_label_, theme::INK);
     if (big_) ui::set_color(big_, theme::INK);
     if (later_) ui::set_color(later_, theme::MUTED);
     if (note_) ui::set_color(note_, theme::MUTED);
@@ -111,11 +122,14 @@ class DeparturesTile : public tessera::Tile {
   int height_ = 0;
   int head_ = 0;
   int gap_ = 0;
+  int title_height_ = 0;
   bool list_ = false;
   bool stale_ = false;
   bool show_platform_ = true;
   bool show_time_ = true;
   std::string stop_;
+  std::string title_;
+  std::string platform_;
   std::string direction_a_;
   std::string direction_b_;
   std::string wait_;
@@ -125,6 +139,7 @@ class DeparturesTile : public tessera::Tile {
   lv_obj_t *big_{};
   lv_obj_t *later_{};
   lv_obj_t *note_{};
+  lv_obj_t *title_label_{};
 
   void read_options(JsonObjectConst options) {
     for (JsonObjectConst choice : options["line"].as<JsonArrayConst>()) lines_.push_back(choice["value"] | "");
@@ -135,6 +150,8 @@ class DeparturesTile : public tessera::Tile {
     direction_a_ = options["direction_a"]["value"] | "";
     if (direction_a_.empty()) direction_a_ = options["direction"]["value"] | "";
     direction_b_ = options["direction_b"]["value"] | "";
+    platform_ = options["platform"]["value"] | "";
+    if (platform_.empty()) platform_ = options["platform"] | "";
     show_platform_ = options["show_platform"] | true;
     show_time_ = options["show_time"] | true;
   }
@@ -216,9 +233,9 @@ class DeparturesTile : public tessera::Tile {
     const Departure &next = departures_[0];
     const std::string main_time = show_time_ ? tessera::clock_text(next.at) : countdown(next.at, now, true);
     ui::set_text(big_, main_time);
-    const int room = height_ - head_ - ui::line_height(Font::BODY);
+    const int room = height_ - title_height_ - head_ - ui::line_height(Font::BODY);
     lv_obj_set_height(big_, ui::line_height(Font::VALUE));
-    lv_obj_set_pos(big_, 0, head_ + std::max(0, (room - ui::line_height(Font::VALUE)) / 2));
+    lv_obj_set_pos(big_, 0, title_height_ + head_ + std::max(0, (room - ui::line_height(Font::VALUE)) / 2));
     std::string later = countdown(next.at, now);
     for (size_t i = 1; i < departures_.size() && i < 3; ++i) {
       later += "  ·  " + countdown(departures_[i].at, now);

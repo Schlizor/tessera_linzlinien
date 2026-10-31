@@ -15,6 +15,8 @@ Live-Abfahrten der LINZ AG Linien auf Tessera-Panels. Das Plugin zeigt Bus, Obus
 5. Im Feld **Haltestelle** mindestens zwei Zeichen eingeben und einen Treffer auswaehlen.
 6. Layout speichern und an den Bildschirm senden.
 
+Optional koennen ein eigener Kartentitel, ein Bahnsteig beziehungsweise eine Richtung (zum Beispiel `0` oder `1`) und bis zu sechs Linien als Filter gesetzt werden.
+
 Die Haltestellensuche verwendet den offiziellen Linz-AG-Stopfinder. Die Auswahl speichert die interne Haltestellen-ID; diese muss normalerweise nicht manuell bekannt sein.
 
 ## Anzeige
@@ -24,6 +26,7 @@ Die Haltestellensuche verwendet den offiziellen Linz-AG-Stopfinder. Die Auswahl 
 - Jede Zeile zeigt Linie, Ziel, Countdown und - wenn vorhanden - den Bahnsteig.
 - Das adaptive Tile zeigt auf 1x1 die naechste Abfahrt gross und wird auf breiteren Karten automatisch zur Liste.
 - Im Listen-Tile koennen optional eine Linie und bis zu zwei Richtungen gewaehlt werden.
+- Jede Karte kann einen eigenen Titel anzeigen und optional auf einen Bahnsteig beziehungsweise eine Richtung eingeschraenkt werden.
 - Es koennen bis zu sechs Linien gleichzeitig ausgewaehlt werden.
 - Die exakte Abfahrtsuhrzeit kann zusaetzlich zum Countdown eingeblendet werden.
 - Die Bahnsteiganzeige kann pro Tile deaktiviert werden.
