@@ -36,8 +36,9 @@ fetch:
         platform: location.properties.platform
         realtime: isRealtimeControlled
         cancelled: isCancelled
-        hints: hints
-        infos: infos
+        hints: hints[*].content
+        info_links: infos[*].infoLinks[*].urlText
+        info_subtitles: infos[*].infoLinks[*].subtitle
       sort: estimated
       limit: 40
   - id: lines
