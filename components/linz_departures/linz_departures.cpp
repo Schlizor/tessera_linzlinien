@@ -171,7 +171,7 @@ class DeparturesTile : public tessera::Tile {
     if (at <= now + 30) return plugin_->text("now");
     const uint32_t left = at - now;
     if (exact) {
-      char text[8];
+      char text[16];
       snprintf(text, sizeof(text), "%u:%02u", static_cast<unsigned>(left / 60), static_cast<unsigned>(left % 60));
       return text;
     }
